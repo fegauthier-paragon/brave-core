@@ -8,11 +8,11 @@
 #include <utility>
 
 #include "base/notimplemented.h"
-#include "base/strings/string_number_conversions.h"
 #include "brave/components/brave_wallet/browser/account_resolver_delegate.h"
 #include "brave/components/brave_wallet/browser/brave_wallet_utils.h"
 #include "brave/components/brave_wallet/browser/keyring_service.h"
 #include "brave/components/brave_wallet/browser/polkadot/polkadot_block_tracker.h"
+#include "brave/components/brave_wallet/browser/polkadot/polkadot_transaction_status_task.h"
 #include "brave/components/brave_wallet/browser/polkadot/polkadot_tx_meta.h"
 #include "brave/components/brave_wallet/browser/polkadot/polkadot_tx_state_manager.h"
 #include "brave/components/brave_wallet/browser/polkadot/polkadot_utils.h"
@@ -265,7 +265,48 @@ mojom::CoinType PolkadotTxManager::GetCoinType() const {
 
 void PolkadotTxManager::UpdatePendingTransactions(
     const std::optional<std::string>& chain_id) {
-  NOTIMPLEMENTED_LOG_ONCE();
+  LOG(INFO) << "PolkadotTxManager::UpdatePendingTransactions";
+
+  auto txs = tx_state_manager().GetTransactionsByStatus(
+      chain_id, mojom::TransactionStatus::Submitted, std::nullopt);
+
+  for (auto& tx : txs) {
+    auto& polkadot_tx = static_cast<PolkadotTxMeta&>(*tx);
+    if (!polkadot_tx.tx()) {
+      // Maybe we should treat this as an error?
+      continue;
+    }
+
+    const auto* extrinsic_metadata = polkadot_tx.tx()->extrinsic_metadata();
+    if (!extrinsic_metadata) {
+      continue;
+    }
+
+    auto task_ptr = std::make_unique<PolkadotTransactionStatusTask>(
+        *polkadot_wallet_service_, keyring_service(),
+        polkadot_tx.from()->Clone(), polkadot_tx.chain_id(),
+        extrinsic_metadata->extrinsic(), extrinsic_metadata->block_num(),
+        extrinsic_metadata->mortality_period());
+
+    auto* task = task_ptr.get();
+    polkadot_transaction_status_tasks_.insert(std::move(task_ptr));
+
+    task->Start(base::BindOnce(&PolkadotTxManager::OnUpdatePendingTransactions,
+                               weak_ptr_factory_.GetWeakPtr(), task));
+  }
+
+  LOG(INFO) << "Found " << txs.size()
+            << " Polkadot transactions submitted to the blockchain";
+}
+
+void PolkadotTxManager::OnUpdatePendingTransactions(
+    PolkadotTransactionStatusTask* task,
+    base::expected<std::pair<bool, uint128_t>, std::string> result) {
+  polkadot_transaction_status_tasks_.erase(task);
+  LOG(INFO) << "Got transaction status updates!!!!";
+  LOG(INFO) << "was successful: " << std::boolalpha << result.value().first;
+  LOG(INFO) << "actual fee paid: "
+            << static_cast<uint64_t>(result.value().second);
 }
 
 void PolkadotTxManager::OnLatestBlock(const std::string& chain_id,

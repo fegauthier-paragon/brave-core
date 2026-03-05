@@ -219,7 +219,9 @@ std::vector<std::unique_ptr<TxMeta>> TxStateManager::GetTransactionsByStatus(
       continue;
     }
 
+    LOG(INFO) << "TxStateManager::GetTransactionsByStatus";
     std::unique_ptr<TxMeta> meta = ValueToTxMeta(*meta_dict);
+    LOG(INFO) << "Got TxMeta struct";
     if (!meta) {
       continue;
     }
