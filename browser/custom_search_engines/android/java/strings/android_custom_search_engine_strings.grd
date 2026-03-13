@@ -159,7 +159,7 @@
           Custom search engines
         </message>
         <message name="IDS_ADD_CUSTOM_SEARCH_ENGINE" desc="Title of the add custom search engine">
-          Add custom search engine
+          Add a custom search engine
         </message>
         <message name="IDS_EDIT_CUSTOM_SEARCH_ENGINE" desc="Title of the edit custom search engine">
           Edit custom search engine

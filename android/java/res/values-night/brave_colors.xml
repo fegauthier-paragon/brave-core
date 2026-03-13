@@ -230,4 +230,7 @@
     <color name="empty_state_tab_border_color">#828CFF</color>
     <color name="empty_state_tab_group_border_color">#828CFF</color>
 
+    <!-- Custom search engines colors -->
+    <color name="add_custom_search_engine_title_color">@color/primitive_primary_80</color>
+
 </resources>

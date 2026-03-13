@@ -7,6 +7,8 @@ package org.chromium.chrome.browser.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 
 import androidx.preference.Preference;
@@ -44,6 +46,7 @@ public class BraveSearchEnginesPreferences extends BravePreferenceFragment
     private static final String PREF_CUSTOM_SEARCH_ENGINES_CATEGORY =
             "custom_search_engines_category";
     private static final String PREF_CUSTOM_SEARCH_ENGINE_LIST = "custom_search_engine_list";
+    private static final String PREF_ADD_CUSTOM_SEARCH_ENGINE = "add_custom_search_engine";
 
     private ChromeManagedPreferenceDelegate mManagedPreferenceDelegate;
 
@@ -92,6 +95,25 @@ public class BraveSearchEnginesPreferences extends BravePreferenceFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateCustomSearchEnginesPreference();
+        colorAddCustomSearchEnginePreference();
+    }
+
+    private void colorAddCustomSearchEnginePreference() {
+        Preference addCustomSearchEnginePref = findPreference(PREF_ADD_CUSTOM_SEARCH_ENGINE);
+        if (addCustomSearchEnginePref == null) {
+            return;
+        }
+        CharSequence originalTitle = addCustomSearchEnginePref.getTitle();
+        if (originalTitle == null) {
+            return;
+        }
+        int color = requireContext().getColor(R.color.add_custom_search_engine_title_color);
+        SpannableString coloredTitle = new SpannableString(originalTitle);
+        coloredTitle.setSpan(new ForegroundColorSpan(color), 0, coloredTitle.length(), 0);
+        // setTitle uses TextUtils.equals() which compares char-by-char and skips the update
+        // if the text content matches. Clear the title first to force the spannable to be set.
+        addCustomSearchEnginePref.setTitle(null);
+        addCustomSearchEnginePref.setTitle(coloredTitle);
     }
 
     private void updateCustomSearchEnginesPreference() {

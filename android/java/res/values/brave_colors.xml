@@ -394,4 +394,7 @@
     <color name="material_secondary_40">@color/primitive_secondary_40</color>
     <color name="material_tertiary_80">@color/primitive_tertiary_80</color>
     <color name="material_tertiary_40">@color/primitive_tertiary_40</color>
+
+    <!-- Custom search engines colors -->
+    <color name="add_custom_search_engine_title_color">@color/primitive_primary_40</color>
 </resources>
