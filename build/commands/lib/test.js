@@ -53,7 +53,6 @@ const deleteFile = (filePath) => {
 const buildTests = async (testsToRun, config) => {
   config.buildTargets = testsToRun
   util.touchOverriddenFiles()
-  util.touchGsutilChangeLogFile()
 
   await util.buildTargets(config.buildTargets, config.defaultOptions)
 }
