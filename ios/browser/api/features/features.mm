@@ -26,6 +26,7 @@
 #include "brave/components/skus/common/features.h"
 #include "brave/ios/browser/api/translate/features.h"
 #include "brave/ios/browser/ui/commerce/features.h"
+#include "brave/ios/browser/ui/quick_view/features.h"
 #include "brave/ios/browser/ui/tab_tray/features.h"
 #include "brave/ios/browser/ui/web_view/features.h"
 #import "build/blink_buildflags.h"
@@ -406,5 +407,9 @@
 + (Feature*)kUseChromiumWebViewsAutofill {
   return [[Feature alloc]
       initWithFeature:&brave::features::kUseChromiumWebViewsAutofill];
+}
+
++ (Feature*)kQuickViewEnabled {
+  return [[Feature alloc] initWithFeature:&brave::features::kQuickViewEnabled];
 }
 @end
