@@ -48,6 +48,7 @@ android_library("java") {
 
 android_resources("java_resources") {
   sources = [
+    "java/res/color/add_search_engine_button_bg_tint.xml",
     "java/res/color/brave_button_text_color.xml",
     "java/res/drawable/brave_action_button_bg.xml",
     "java/res/drawable/confirmation_dialog_shape.xml",

@@ -63,8 +63,7 @@
 
     <!-- Brave wallet 2.0 colors -->
     <color name="brave_wallet_dn_panel_bg">#EDEEF1</color>
-    <color name="button_disabled">#46464a</color>
-    <color name="text_disabled">#21272a</color>
+
     <color name="text_on_primary">#FFFFFF</color>
     <color name="icon_interactive">#434fcf</color>
     <color name="system_feedback_error">#B3002A</color>
