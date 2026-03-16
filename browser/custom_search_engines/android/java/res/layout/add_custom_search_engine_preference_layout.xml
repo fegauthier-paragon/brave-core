@@ -12,54 +12,85 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/title_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        app:expandedHintEnabled="false"
-        android:hint="@string/add_custom_search_engine_title">
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/schemes_surface_container_lowest"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/title_edittext"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:padding="16dp"
-            android:gravity="top"
-            android:hint="@string/add_custom_search_engine_title_hint" />
+            android:orientation="vertical">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/title_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                app:expandedHintEnabled="false"
+                app:boxCornerRadiusTopStart="@dimen/custom_search_engine_input_corner_radius"
+                app:boxCornerRadiusTopEnd="@dimen/custom_search_engine_input_corner_radius"
+                app:boxCornerRadiusBottomStart="@dimen/custom_search_engine_input_corner_radius"
+                app:boxCornerRadiusBottomEnd="@dimen/custom_search_engine_input_corner_radius"
+                android:hint="@string/add_custom_search_engine_title">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/url_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        app:expandedHintEnabled="false"
-        android:hint="@string/add_custom_search_engine_url">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/title_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:padding="16dp"
+                    android:gravity="top"
+                    android:hint="@string/add_custom_search_engine_title_hint" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/url_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:padding="16dp"
-            android:gravity="top"
-            android:hint="@string/add_custom_search_engine_url_hint" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/url_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                app:expandedHintEnabled="false"
+                app:boxCornerRadiusTopStart="@dimen/custom_search_engine_input_corner_radius"
+                app:boxCornerRadiusTopEnd="@dimen/custom_search_engine_input_corner_radius"
+                app:boxCornerRadiusBottomStart="@dimen/custom_search_engine_input_corner_radius"
+                app:boxCornerRadiusBottomEnd="@dimen/custom_search_engine_input_corner_radius"
+                android:hint="@string/add_custom_search_engine_url">
 
-    <TextView
-        android:id="@+id/add_custom_se_text"
-        android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/url_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:padding="16dp"
+                    android:gravity="top"
+                    android:hint="@string/add_custom_search_engine_url_hint" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/add_custom_se_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="16dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="4dp"
-        android:paddingHorizontal="16dp" />
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="wrap_content"

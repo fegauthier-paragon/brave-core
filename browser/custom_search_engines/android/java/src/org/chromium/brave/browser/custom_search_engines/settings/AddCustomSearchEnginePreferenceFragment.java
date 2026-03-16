@@ -5,7 +5,6 @@
 
 package org.chromium.brave.browser.custom_search_engines.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -43,6 +41,7 @@ public class AddCustomSearchEnginePreferenceFragment extends ChromeBaseSettingsF
     private @Nullable TextInputEditText mTitleEdittext;
 
     private @Nullable TextInputEditText mUrlEdittext;
+
     private @Nullable TextInputLayout mUrlLayout;
 
     private @Nullable Button mAddSearchEngineButton;
@@ -113,7 +112,7 @@ public class AddCustomSearchEnginePreferenceFragment extends ChromeBaseSettingsF
                             }
                         });
 
-        updateActionBarTitle();
+        mPageTitle.set(getString(R.string.edit_custom_search_engine));
     }
 
     private void populateFields(TemplateUrl templateUrl) {
@@ -124,16 +123,6 @@ public class AddCustomSearchEnginePreferenceFragment extends ChromeBaseSettingsF
         String queryReplacedUrl = templateUrl.getURL().replace("{searchTerms}", "%s");
         mUrlEdittext.setText(queryReplacedUrl);
         mAddSearchEngineButton.setText(getString(R.string.save_changes_action_text));
-    }
-
-    private void updateActionBarTitle() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            Toolbar actionBar = activity.findViewById(R.id.action_bar);
-            if (actionBar != null) {
-                actionBar.setTitle(getString(R.string.edit_custom_search_engine));
-            }
-        }
     }
 
     private void initViews(View rootView) {
