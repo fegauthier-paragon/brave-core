@@ -16,9 +16,9 @@
 #include "base/test/bind.h"
 #include "base/test/scoped_feature_list.h"
 #include "base/test/test_future.h"
-#include "brave/browser/misc_metrics/profile_misc_metrics_service.h"
-#include "brave/browser/misc_metrics/profile_misc_metrics_service_factory.h"
 #include "brave/browser/serp_metrics/serp_metrics_all_profiles_aggregator.h"
+#include "brave/browser/serp_metrics/serp_metrics_service.h"
+#include "brave/browser/serp_metrics/serp_metrics_service_factory.h"
 #include "brave/components/constants/pref_names.h"
 #include "brave/components/serp_metrics/serp_metric_type.h"
 #include "brave/components/serp_metrics/serp_metrics.h"
@@ -232,11 +232,10 @@ class SerpMetricsTabHelperTest : public PlatformBrowserTest {
   }
 
   SerpMetrics* GetSerpMetrics() const {
-    auto* profile_misc_metrics_service =
-        misc_metrics::ProfileMiscMetricsServiceFactory::GetServiceForContext(
-            GetProfile());
-    CHECK(profile_misc_metrics_service);
-    return profile_misc_metrics_service->GetSerpMetrics();
+    auto* serp_metrics_service =
+        SerpMetricsServiceFactory::GetFor(GetProfile());
+    CHECK(serp_metrics_service);
+    return serp_metrics_service->Get();
   }
 
   base::test::ScopedFeatureList scoped_feature_list_;
