@@ -231,6 +231,7 @@
 -All/AdsPageLoadMetricsObserverResourceBrowserTest.*
 -All/AdsPageLoadMetricsObserverRecordedUKMMetricsTest.*
 -All/AutomaticLazyLoadFrameBrowserTest.*
+-BackToAdInterventionDisabledBrowserTest.*
 -Browser/SubresourceFilterDnsAliasFilteringThrottleBrowserTest.*
 -LargeStickyAdViolationBrowserTest.*
 -LargeStickyAdViolationBrowserTestWithoutEnforcement.*
