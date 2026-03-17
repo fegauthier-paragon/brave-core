@@ -7,6 +7,7 @@
 
 #include <algorithm>
 
+#include "base/logging.h"
 #include "brave/third_party/blink/renderer/brave_farbling_constants.h"
 #include "brave/third_party/blink/renderer/core/farbling/brave_session_cache.h"
 #include "third_party/blink/public/common/device_memory/approximated_device_memory.h"
@@ -16,6 +17,7 @@ namespace brave {
 float FarbleDeviceMemory(blink::ExecutionContext* context) {
   float true_value =
       blink::ApproximatedDeviceMemory::GetApproximatedDeviceMemory();
+  LOG(INFO) << "FarbleDeviceMemory: true_value = " << true_value;
   BraveFarblingLevel farbling_level = brave::GetBraveFarblingLevelFor(
       context, ContentSettingsType::BRAVE_WEBCOMPAT_DEVICE_MEMORY,
       BraveFarblingLevel::OFF);
@@ -62,7 +64,9 @@ namespace blink {
 
 float NavigatorDeviceMemory::deviceMemory(ScriptState* script_state) const {
   ExecutionContext* context = ExecutionContext::From(script_state);
-  return brave::FarbleDeviceMemory(context);
+  float farbled = brave::FarbleDeviceMemory(context);
+  LOG(INFO) << "NavigatorDeviceMemory::deviceMemory: farbled = " << farbled;
+  return farbled;
 }
 
 }  // namespace blink

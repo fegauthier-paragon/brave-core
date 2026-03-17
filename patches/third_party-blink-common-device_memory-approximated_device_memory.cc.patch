@@ -1,0 +1,38 @@
+diff --git a/third_party/blink/common/device_memory/approximated_device_memory.cc b/third_party/blink/common/device_memory/approximated_device_memory.cc
+index d67deb2184f1427bf2cae448ace4b1d9d5236ef3..c8e9e3c45a5208f84f5abd3d34577b85df63dc2a 100644
+--- a/third_party/blink/common/device_memory/approximated_device_memory.cc
++++ b/third_party/blink/common/device_memory/approximated_device_memory.cc
+@@ -6,6 +6,7 @@
+ 
+ #include "base/check_op.h"
+ #include "base/feature_list.h"
++#include "base/logging.h"
+ #include "base/system/sys_info.h"
+ #include "third_party/blink/public/common/features.h"
+ 
+@@ -21,6 +22,8 @@ void ApproximatedDeviceMemory::Initialize() {
+     return;
+   DCHECK_EQ(0, physical_memory_mb_);
+   physical_memory_mb_ = ::base::SysInfo::AmountOfPhysicalMemory().InMiB();
++  LOG(INFO) << "ApproximatedDeviceMemory::Initialize: physical_memory_mb_ = "
++            << physical_memory_mb_;
+   CalculateAndSetApproximatedDeviceMemory();
+ }
+ 
+@@ -81,11 +84,16 @@ void ApproximatedDeviceMemory::CalculateAndSetApproximatedDeviceMemory() {
+   } else if (approximated_device_memory_gb_ > kMaxMemory) {
+     approximated_device_memory_gb_ = kMaxMemory;
+   }
++  LOG(INFO)
++      << "ApproximatedDeviceMemory::CalculateAndSetApproximatedDeviceMemory: "
++      << "approximated_device_memory_gb_ = " << approximated_device_memory_gb_;
+ }
+ 
+ // static
+ void ApproximatedDeviceMemory::SetPhysicalMemoryMBForTesting(
+     int64_t physical_memory_mb) {
++  LOG(INFO) << "ApproximatedDeviceMemory::SetPhysicalMemoryMBForTesting: "
++            << "physical_memory_mb = " << physical_memory_mb;
+   physical_memory_mb_ = physical_memory_mb;
+   CalculateAndSetApproximatedDeviceMemory();
+ }

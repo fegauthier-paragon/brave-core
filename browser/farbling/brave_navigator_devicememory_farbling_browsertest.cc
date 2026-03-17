@@ -103,12 +103,18 @@ IN_PROC_BROWSER_TEST_F(BraveDeviceMemoryFarblingBrowserTest,
   std::string domain2 = "d.test";
   GURL url1 = https_server_.GetURL(domain1, "/simple.html");
   GURL url2 = https_server_.GetURL(domain2, "/simple.html");
+
+  // Get the actual physical RAM on the test machine.
+  int physical_memory =
+      static_cast<int>(base::SysInfo::AmountOfTotalPhysicalMemory().InMiB());
+  LOG(INFO) << "Physical memory: " << physical_memory << "MB";
   // set memory to 64GB (greater than the ApproximatedDeviceMemory kMaxMemory of
   // 32X).
   blink::ApproximatedDeviceMemory::SetPhysicalMemoryMBForTesting(1024 * 64);
   int true_value =
       blink::ApproximatedDeviceMemory::GetApproximatedDeviceMemory() * 1024;
   EXPECT_EQ(true_value, 32768);
+
   // Farbling level: off
   AllowFingerprinting(domain1);
   ASSERT_TRUE(ui_test_utils::NavigateToURL(browser(), url1));
