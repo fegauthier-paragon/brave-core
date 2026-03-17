@@ -2764,6 +2764,9 @@
 # This test is flakey upstream.
 -All/CookiesApiTest.Cookies/*
 
+# Temporarily commented out while we add support for features::kWebUILocationBar
+-WebUILocationBarBrowserTest.GetAnchor
+
 # Tests below this point have not been diagnosed or had issues created yet.
 -AdsPageLoadMetricsObserverBrowserTest.*
 -AdsPageLoadMetricsObserverSurfaceBrowserTest.DetectedAsAd/*
