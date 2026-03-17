@@ -2761,6 +2761,9 @@
 -WebrtcLoggingPrivateApiStartEventLoggingTestPolicyEnabled.*
 -WebrtcLoggingPrivateApiTest.*
 
+# This test is flakey upstream.
+-All/CookiesApiTest.Cookies/*
+
 # Tests below this point have not been diagnosed or had issues created yet.
 -AdsPageLoadMetricsObserverBrowserTest.*
 -AdsPageLoadMetricsObserverSurfaceBrowserTest.DetectedAsAd/*
