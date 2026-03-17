@@ -1,0 +1,23 @@
+diff --git a/third_party/blink/renderer/platform/loader/fetch/resource_request.cc b/third_party/blink/renderer/platform/loader/fetch/resource_request.cc
+index f9d49a623c5fc46126c9b7bb0f8a70b465aee2d6..477aa665ded22027d77a75136ac1c2de072b5247 100644
+--- a/third_party/blink/renderer/platform/loader/fetch/resource_request.cc
++++ b/third_party/blink/renderer/platform/loader/fetch/resource_request.cc
+@@ -89,8 +89,17 @@ const base::TimeDelta ResourceRequestHead::default_timeout_interval_ =
+ 
+ ResourceRequestHead::ResourceRequestHead() : ResourceRequestHead(NullURL()) {}
+ 
++KURL MakeChromeURL(const KURL& brave_url) {
++  if (!brave_url.ProtocolIs("brave")) {
++    return brave_url;
++  }
++  KURL chrome_url(brave_url);
++  chrome_url.SetProtocol("chrome");
++  return chrome_url;
++}
++
+ ResourceRequestHead::ResourceRequestHead(const KURL& url)
+-    : url_(url),
++    : url_(MakeChromeURL(url)),
+       timeout_interval_(default_timeout_interval_),
+       http_method_(http_names::kGET),
+       report_upload_progress_(false),

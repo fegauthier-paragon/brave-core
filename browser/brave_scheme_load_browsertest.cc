@@ -26,7 +26,6 @@
 #include "content/public/test/browser_test.h"
 #include "content/public/test/browser_test_utils.h"
 #include "content/public/test/no_renderer_crashes_assertion.h"
-#include "content/public/test/test_navigation_observer.h"
 #include "net/dns/mock_host_resolver.h"
 
 #if BUILDFLAG(ENABLE_BRAVE_WALLET)
@@ -134,7 +133,7 @@ class BraveSchemeLoadBrowserTest : public InProcessBrowserTest,
     EXPECT_EQ(url, base::UTF16ToUTF8(browser()
                                          ->GetFeatures()
                                          .location_bar_model()
-                                         ->GetFormattedFullURL()));
+                                         ->GetURLForDisplay()));
     EXPECT_EQ(2, browser()->tab_strip_model()->count());
     // Private window stays as initial state.
     EXPECT_EQ("about:blank",
@@ -164,7 +163,7 @@ class BraveSchemeLoadBrowserTest : public InProcessBrowserTest,
     EXPECT_EQ("about:blank", base::UTF16ToUTF8(browser()
                                                    ->GetFeatures()
                                                    .location_bar_model()
-                                                   ->GetFormattedFullURL()));
+                                                   ->GetURLForDisplay()));
     EXPECT_EQ(1, browser()->tab_strip_model()->count());
   }
 
@@ -190,12 +189,14 @@ class BraveSchemeLoadBrowserTest : public InProcessBrowserTest,
 IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest, NotAllowedToLoadTest) {
   EXPECT_TRUE(
       NavigateToURLUntilLoadStop("example.com", "/brave_scheme_load.html"));
-  content::TestNavigationObserver observer(active_contents());
+  content::WebContentsConsoleObserver console_observer(active_contents());
+  console_observer.SetPattern(
+      "Not allowed to load local resource: chrome://settings/");
 
   ASSERT_TRUE(content::ExecJs(
       active_contents(),
       "window.domAutomationController.send(openBraveSettings())"));
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Test whether brave page is not loaded from different host by window.open().
@@ -203,12 +204,14 @@ IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest,
                        NotAllowedToLoadTestByWindowOpenWithNoOpener) {
   EXPECT_TRUE(
       NavigateToURLUntilLoadStop("example.com", "/brave_scheme_load.html"));
-  content::TestNavigationObserver observer(active_contents());
+  content::WebContentsConsoleObserver console_observer(active_contents());
+  console_observer.SetPattern(
+      "Not allowed to load local resource: chrome://settings/");
 
   ASSERT_TRUE(content::ExecJs(
       active_contents(),
       "window.domAutomationController.send(openBraveSettingsWithNoOpener())"));
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Test whether brave page is not loaded from different host directly by
@@ -217,12 +220,14 @@ IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest,
                        NotAllowedToDirectReplaceTest) {
   EXPECT_TRUE(
       NavigateToURLUntilLoadStop("example.com", "/brave_scheme_load.html"));
-  content::TestNavigationObserver observer(active_contents());
+  content::WebContentsConsoleObserver console_observer(active_contents());
+  console_observer.SetPattern(
+      "Not allowed to load local resource: chrome://settings/");
 
   ASSERT_TRUE(content::ExecJs(
       active_contents(),
       "window.domAutomationController.send(replaceToBraveSettingsDirectly())"));
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Test whether brave page is not loaded from different host indirectly by
@@ -239,7 +244,7 @@ IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest,
   ASSERT_TRUE(content::ExecJs(initial_active_tab,
                               "window.domAutomationController.send("
                               "replaceToBraveSettingsIndirectly())"));
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Test whether brave page is not loaded from chrome page.
@@ -248,24 +253,27 @@ IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest,
   NavigateToURLBlockUntilNavigationsComplete(active_contents(),
                                              GURL("chrome://newtab/"), 1);
 
-  content::TestNavigationObserver observer(active_contents());
+  content::WebContentsConsoleObserver console_observer(active_contents());
+  console_observer.SetPattern(
+      "Not allowed to load local resource: chrome://settings/");
 
   ASSERT_TRUE(
       content::ExecJs(active_contents(), "window.open(\"brave://settings\")"));
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Test whether brave page is not loaded by click.
 IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest, NotAllowedToBraveByClick) {
   EXPECT_TRUE(
       NavigateToURLUntilLoadStop("example.com", "/brave_scheme_load.html"));
+  content::WebContentsConsoleObserver console_observer(active_contents());
+  console_observer.SetPattern(
+      "Not allowed to load local resource: chrome://settings/");
 
-  content::TestNavigationObserver observer(active_contents());
   ASSERT_TRUE(content::ExecJs(
       active_contents(),
       "window.domAutomationController.send(gotoBraveSettingsByClick())"));
-  observer.WaitForNavigationFinished();
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Test whether brave page is not loaded by middle click.
@@ -273,13 +281,14 @@ IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest,
                        NotAllowedToBraveByMiddleClick) {
   EXPECT_TRUE(
       NavigateToURLUntilLoadStop("example.com", "/brave_scheme_load.html"));
+  content::WebContentsConsoleObserver console_observer(active_contents());
+  console_observer.SetPattern(
+      "Not allowed to load local resource: chrome://settings/");
 
-  content::TestNavigationObserver observer(active_contents());
   ASSERT_TRUE(content::ExecJs(
       active_contents(),
       "window.domAutomationController.send(gotoBraveSettingsByMiddleClick())"));
-  observer.WaitForNavigationFinished();
-  EXPECT_EQ(GURL("about:blank#blocked"), active_contents()->GetURL());
+  ASSERT_TRUE(console_observer.Wait());
 }
 
 // Check renderer crash happened by observing related notification.
@@ -300,7 +309,7 @@ IN_PROC_BROWSER_TEST_F(BraveSchemeLoadBrowserTest, MAYBE_CrashURLTest) {
       content::RenderProcessHostWatcher::WATCH_FOR_PROCESS_EXIT);
   content::ScopedAllowRendererCrashes allow_renderer_crashes(active_contents());
   browser()->OpenURL(
-      content::OpenURLParams(GURL("brave://crash/"), content::Referrer(),
+      content::OpenURLParams(GURL("brave://crash"), content::Referrer(),
                              WindowOpenDisposition::CURRENT_TAB,
                              ui::PAGE_TRANSITION_TYPED, false),
       /*navigation_handle_callback=*/{});
