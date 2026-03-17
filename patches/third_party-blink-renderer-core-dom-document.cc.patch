@@ -1,0 +1,28 @@
+diff --git a/third_party/blink/renderer/core/dom/document.cc b/third_party/blink/renderer/core/dom/document.cc
+index dde7e8993cb8e59d0cbc1a15fffaedb8b0a26688..874c34ae74db95ed367524d76bb7ff352e136d81 100644
+--- a/third_party/blink/renderer/core/dom/document.cc
++++ b/third_party/blink/renderer/core/dom/document.cc
+@@ -7561,6 +7561,15 @@ KURL Document::CompleteURL(
+   return CompleteURLWithOverride(url.ToString(), base_url_, preload_status);
+ }
+ 
++KURL MakeChromeURL(const KURL& brave_url) {
++  if (!brave_url.ProtocolIs("brave")) {
++    return brave_url;
++  }
++  KURL chrome_url(brave_url);
++  chrome_url.SetProtocol("chrome");
++  return chrome_url;
++}
++
+ KURL Document::CompleteURLWithOverride(
+     const String& url,
+     const KURL& base_url_override,
+@@ -7578,6 +7587,7 @@ KURL Document::CompleteURLWithOverride(
+   if (result.IsEmpty()) {
+     result = Encoding().IsValid() ? KURL(base_url_override, url, Encoding())
+                                   : KURL(base_url_override, url);
++    result = MakeChromeURL(result);
+     url_cache_.Put(base_url_override, url, result);
+   }
+   // If the conditions are met for
