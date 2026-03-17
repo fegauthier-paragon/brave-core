@@ -6,7 +6,11 @@
 package org.chromium.brave.browser.custom_search_engines.settings;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,12 +117,26 @@ public class CustomSearchEngineAdapter
     private void showConfirmationDialog(String searchEngineKeyword) {
         ConfirmationDialog.OnConfirmationDialogListener listener =
                 createDialogListener(searchEngineKeyword);
+        String formattedMessage =
+                mContext.getString(R.string.delete_custom_search_engine_text, searchEngineKeyword);
+        SpannableStringBuilder messageSpan = new SpannableStringBuilder(formattedMessage);
+        int nameStart = formattedMessage.indexOf(searchEngineKeyword);
+        if (nameStart >= 0) {
+            // Include the surrounding quote characters (straight or curly)
+            int boldStart = nameStart > 0 ? nameStart - 1 : nameStart;
+            int boldEnd = nameStart + searchEngineKeyword.length();
+            if (boldEnd < formattedMessage.length()) boldEnd++;
+            messageSpan.setSpan(
+                    new StyleSpan(Typeface.BOLD),
+                    boldStart,
+                    boldEnd,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         new ConfirmationDialog()
                 .showConfirmDialog(
                         mContext,
                         mContext.getString(R.string.delete_custom_search_engine_title),
-                        mContext.getString(
-                                R.string.delete_custom_search_engine_text, searchEngineKeyword),
+                        messageSpan,
                         mContext.getString(R.string.delete_action_text),
                         mContext.getString(R.string.cancel_action_text),
                         listener);

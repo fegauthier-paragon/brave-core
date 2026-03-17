@@ -5,9 +5,13 @@
 
 package org.chromium.brave.browser.custom_search_engines.settings;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,11 +136,33 @@ public class AddCustomSearchEnginePreferenceFragment extends ChromeBaseSettingsF
         mUrlLayout = (TextInputLayout) rootView.findViewById(R.id.url_layout);
 
         TextView addCustomSeText = (TextView) rootView.findViewById(R.id.add_custom_se_text);
-        String addCustomSeString =
-                getResources().getString(R.string.add_custom_search_engine_text1)
-                        + "\n\n"
-                        + getResources().getString(R.string.add_custom_search_engine_text2);
-        addCustomSeText.setText(addCustomSeString);
+        String text1 = getResources().getString(R.string.add_custom_search_engine_text1);
+        String text2 = getResources().getString(R.string.add_custom_search_engine_text2);
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        ssb.append(text1);
+        // Bold "%s." at the end of text1
+        int t1BoldStart = text1.indexOf("%s");
+        if (t1BoldStart >= 0) {
+            ssb.setSpan(
+                    new StyleSpan(Typeface.BOLD),
+                    t1BoldStart,
+                    Math.min(t1BoldStart + 3, text1.length()),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        ssb.append("\n\n");
+        int text2Offset = ssb.length();
+        ssb.append(text2);
+        // Bold the URL (from "https://" through "%s.") in text2
+        int urlStart = text2.indexOf("https://");
+        int urlEnd = text2.indexOf("%s.", urlStart >= 0 ? urlStart : 0);
+        if (urlStart >= 0 && urlEnd >= 0) {
+            ssb.setSpan(
+                    new StyleSpan(Typeface.BOLD),
+                    text2Offset + urlStart,
+                    text2Offset + urlEnd + 3,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        addCustomSeText.setText(ssb);
 
         initTextWatchers();
 

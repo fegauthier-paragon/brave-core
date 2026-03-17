@@ -51,7 +51,7 @@ public class ConfirmationDialog {
     public void showConfirmDialog(
             Context context,
             String title,
-            String message,
+            CharSequence message,
             String positiveButtonText,
             String negativeButtonText,
             OnConfirmationDialogListener listener) {
@@ -77,7 +77,7 @@ public class ConfirmationDialog {
         mDialog.setContentView(R.layout.confirmation_dialog_layout);
     }
 
-    private void configureDialogContent(String title, String message) {
+    private void configureDialogContent(String title, CharSequence message) {
         if (mDialog == null) {
             return;
         }
